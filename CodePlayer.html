@@ -1,0 +1,214 @@
+<head>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <style>
+        body
+        {
+            margin:0;
+            padding:0;
+            font-family:Helvetica;
+        }
+        #toolbar
+        {
+            width:100%;
+            height:50px;
+            background-color:#EEEEEE;
+            float:left;
+        }
+        #codeplayer-name
+        {
+            font-weight:bold;
+            font-family:Helvetica;
+            font-size:25;
+            float:left;
+            height:100%;
+            padding:10px;
+        }
+        #button-wrapper
+        {
+            height:30px;
+            position:relative;
+            top:50%;
+            transform:translateY(-50%);
+            left:30%;
+        }
+        .toggle-button
+        {
+            padding:5px;
+            border:1px solid black;
+            float:left;
+            background-color:#EEEEEE;
+        }
+        .clicked
+        {
+            background-color:black;
+            color:white;
+        }
+        .middle
+        {
+            border-right:none;
+            border-left:none;
+        }
+        .left
+        {
+            border-top-left-radius:4px;
+            border-bottom-left-radius:4px;
+        }
+        .right
+        {
+            border-top-right-radius:4px;
+            border-bottom-right-radius:4px;
+        }
+        .toggle-button:hover
+        {
+            background-color:grey;
+            color:white;
+        }
+        .content-wrapper
+        {
+            float:left;
+            position:relative;
+            width:0px;
+        }
+        .main-pane
+        {
+            width:100%;
+            border-left:1px solid grey;
+            border-top:1px solid grey;
+        }
+        .pane-title
+        {
+            height:50px;
+            width:100%;
+        }
+        .pane-title-text
+        {
+            position:relative;
+            padding-left:10px;
+            top:30%;
+            font-weight:bold;
+        }
+        textarea
+        {
+            height:100%;
+            width:100%;
+        }
+        iframe
+        {
+            border:none;
+            height:100%;
+            width:100%;
+        }
+        .hidden
+        {
+            display:none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="toolbar">
+        <div id="codeplayer-name">
+            <span style="font-style:italic;">CodePlayer</span>
+        </div>
+        <div id="button-wrapper">
+            <div id="html" class="clicked toggle-button left">
+                <span class="button-name">HTML</span>
+            </div>
+            <div id="css" class="toggle-button middle" style="border-right:1px solid black">
+                <span class="button-name">CSS</span>
+            </div>
+            <div id="javascript" class="toggle-button middle">
+                <span class="button-name">JavaScript</span>
+            </div>
+            <div id="output" class="clicked toggle-button right">
+                <span class="button-name">Output</span>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="html2" class="content-wrapper">
+        <div class="pane-title">
+            <span class="pane-title-text">HTML</span>
+        </div>
+        <div class="main-pane">
+            <textarea id="htmlText" placeholder="HTML goes here..."><p id="new-paragraph">This is a new paragraph</p></textarea>
+        </div>
+    </div>
+    <div id="css2" class="content-wrapper hidden">
+        <div class="pane-title">
+            <span class="pane-title-text">CSS</span>
+        </div>
+        <div class="main-pane">
+            <textarea id="cssText" placeholder="CSS goes here...">#new-paragraph{color:blue;font-weight:bold;}</textarea>
+        </div>
+    </div>
+    <div id="javascript2" class="content-wrapper hidden">
+        <div class="pane-title">
+            <span class="pane-title-text">JavaScript</span>
+        </div>
+        <div class="main-pane">
+            <textarea id="javascriptText" placeholder="Javascript goes here...">document.getElementById("new-paragraph").style.textDecoration = "underline";</textarea>
+        </div>
+    </div>
+    <div id="output2" class="content-wrapper">
+        <div class="pane-title">
+            <span class="pane-title-text">Output</span>
+        </div>
+        <div class="main-pane">
+            <iframe id="outputText"></iframe>
+        </div>
+    </div>
+
+
+    <script>
+        var height = $("body").height()-$("#toolbar").height();
+        $(".content-wrapper").css("height",height+"px");
+        var paneHeight = $(".content-wrapper").height()-$(".pane-title").height();
+        $(".main-pane").css("height",paneHeight);
+        $(".content-wrapper").css("width","50%");
+
+        //executes iframe refresh on change in textarea, keystroke, or paste
+        $("#htmlText").on("load change keyup paste", function(){
+            $("iframe").contents().find("body").html("<html><head><style>" + $("#cssText").val() + "</style></head><body>" + $("#htmlText").val() + "</body></html>");
+            document.getElementById("outputText").contentWindow.eval($("#javascriptText").val());
+        })
+        $("#cssText").on("load change keyup paste", function(){
+            $("iframe").contents().find("body").html("<html><head><style>" + $("#cssText").val() + "</style></head><body>" + $("#htmlText").val() + "</body></html>");
+            document.getElementById("outputText").contentWindow.eval($("#javascriptText").val());
+        })
+        //executes iframe refresh on page load
+        $("iframe").contents().find("body").html("<html><head><style>" + $("#cssText").val() + "</style></head><body>" + $("#htmlText").val() + "</body></html>");
+        document.getElementById("outputText").contentWindow.eval($("#javascriptText").val());
+
+
+        $(".toggle-button").click(function()
+        {
+            $(this).toggleClass("clicked");
+            $("#"+$(this).attr("id")+"2").toggleClass("hidden");
+
+            var visiblePanes = 4;
+            $(".content-wrapper").each(function(index,value)
+            {
+                if($(this).hasClass("hidden"))
+                {
+                    visiblePanes--;
+                }
+            })
+            if(visiblePanes!=0)
+            {
+                var paneWidth = (100/visiblePanes).toString()+"%";
+                $(".content-wrapper").each(function(index,value)
+                {
+                    if(!$(this).hasClass("hidden"))
+                    {
+                        $(".content-wrapper").css("width",paneWidth);
+                    }
+                })
+            }
+        })
+    </script>
+</body>
+</html>
