@@ -1,11 +1,11 @@
 # Web-Development-Practice
-A few front-end practice websites!
+A few front-end practice websites! [Server-side Projects](http://www.ccrideshare.com) available here.
 
 **CodePlayer.html**
   - A website that utilizes javascript, jQuery, HTML, AJAX, and CSS. When any html, css, or javascript code is entered into their respective text areas, its output is displayed in the "output" tab. The tabs are opened, resized, and closed using jQuery and Javascript.
  
 **AppPromotion.html**
-  - A website that incorporates knowledge of Bootstrap, Javascript, CSS, and HTML. This site is considered practice for the larger (under development) [CCRideShare](http://www.ccrideshare.com) homepage. 
+  - A website that incorporates knowledge of Bootstrap, Javascript, CSS, and HTML. This site is considered practice for the larger (under development) CC RideShare homepage. 
   
 **BBC.html**
   - A replica of [BBC's Tech News](https://www.bbc.com/news/technology) webpage using basic HTML and CSS. Articles linked on replica are from June 2018.
